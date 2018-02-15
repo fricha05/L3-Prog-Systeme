@@ -1,0 +1,13 @@
+flags : -Wall -Wfatal-errors
+
+argc : tableau de pointeur se terminant par null
+
+perror
+
+finir main avec exit 0
+
+exit au lieu de return
+
+fonctions à utiliser stat, lstat, perror, exit
+
+utiliser le nom de variable buf ou buffer

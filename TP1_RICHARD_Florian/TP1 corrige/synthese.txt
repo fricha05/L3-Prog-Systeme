@@ -1,0 +1,20 @@
+_typemap :
+Cette structure permet d'éviter les switch ou les if à répétition.
+Pour cela, on définit un tableau de typemap. 
+Une typemap se constitue d'un caractère et d'un short qui est la 
+valeur de retour des fonctions de définies dans lstat qui donnent 
+des infos sur un fichier.
+On initialise le tableau de typemap avec les valeurs qui définissent
+le mode_t.
+
+stat :
+stat prend en paramètre une chaîne de caractère représentant un chemin 
+et une structure stat représentant l'élément au bout de ce chemin.
+Elle permet d'obtenir des informations sur l'élément pointé. 
+Ces informations sont accessibles grâce à la structre stat.
+Pour obtenir les informations sur le type de l'élément, on utilise le
+champs st_mode qui, à l'aide des champs de la structure mode_t, 
+va retourner des valeurs permettant d'identifier l'élément.
+
+dirent :
+
