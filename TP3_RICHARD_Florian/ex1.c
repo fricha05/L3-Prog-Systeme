@@ -1,10 +1,4 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
+#include "ex1.h"
 
 void myCat(int argc, char const *argv[]){
 	char buf[BUFSIZ];
@@ -28,10 +22,4 @@ void myCat(int argc, char const *argv[]){
 		}
 		close(file);
 	}
-}
-
-int main(int argc, char const *argv[])
-{
-	myCat(argc, argv);
-	exit(EXIT_SUCCESS);
 }

@@ -37,22 +37,36 @@ extern int optind, opterr, optopt;
 }*/
 
 int main(int argc, char ** argv) {
-    int recur = 0;
+    int recur = 0, mode = 0;
     int r;
-
-    while((r = getopt(argc, argv, "R")) != -1)
-        if (r == 'R')
-            recur = 1;
+	
+	/*
+	 * getopt récupère les options ajoutées par l'utilisateur et permet
+	 * de définir ce qu'il faut afficher dans le listing des dossiers
+	 */
+	
+    while((r = getopt(argc, argv, "nlR::")) != -1)
+		switch(r){
+			case 'R':
+				recur = 1;
+				break;
+			case 'l':
+				mode = 1;
+				break;
+			case 'n':
+				mode = 2;
+				break;
+		}
 
     if (optind == argc) {
-        if (display_dir_rec(".", recur) == -1) {
+        if (display_dir_rec(".", recur, mode) == -1) {
             perror(argv[0]);
             exit(EXIT_FAILURE);
         }
     } else {
         int i;
         for (i = optind; i < argc; ++i)
-            if (display_rec(argv[i], recur) == -1) {
+            if (display_rec(argv[i], recur, mode) == -1) {
                 perror(argv[0]);
                 exit(EXIT_FAILURE);
             }

@@ -1,5 +1,5 @@
 NOMFICHIER = exo1
-CC = gcc
+CC = colorgcc
 CFLAGS = -g -O2 -Wall -Wfatal-errors
 LDFLAGS = 
 LDLIBS = 

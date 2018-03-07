@@ -1,14 +1,7 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
+#include "ex2.h"
 
 void myCp(int argc, char const *argv[]){
 	char buf[BUFSIZ];
-	int i = 1;
 	int src, dest;
 	if(argc < 2){
 		perror("Pas de fichier\n");
@@ -31,11 +24,4 @@ void myCp(int argc, char const *argv[]){
 	}
 	close(src);
 	close(dest);
-}
-
-
-int main(int argc, char const *argv[])
-{
-	myCp(argc, argv);
-	exit(EXIT_SUCCESS);
 }

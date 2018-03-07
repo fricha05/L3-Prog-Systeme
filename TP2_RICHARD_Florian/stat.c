@@ -28,7 +28,7 @@ char filetype(mode_t st_mode) {
     return '?';
 }
 
-void affiche_infos(const struct stat * buf, char type, const char * filename) {
+void affiche_infos(const struct stat * buf, char type, const char * filename, int mode) {
     printf("%s ", filename);
     affiche_inode(buf);
     struct passwd* pwd;
@@ -37,8 +37,14 @@ void affiche_infos(const struct stat * buf, char type, const char * filename) {
     pwd = getpwuid(buf->st_uid);
     group = getgrgid(buf->st_gid);
     
-    printf("%s ", pwd->pw_name);
-    printf("%s ", group->gr_name);
+    if(mode == 1){
+		printf("%s ", pwd->pw_name);
+		printf("%s ", group->gr_name);
+	}
+	if(mode == 2){
+		printf("%d ", pwd->pw_uid);
+		printf("%d ", group->gr_gid);
+	}
     printf("%c ", type);
 }
 

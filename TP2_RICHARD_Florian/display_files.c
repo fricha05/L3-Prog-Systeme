@@ -20,7 +20,7 @@ int is_dir(const char type) {
 PARCOURS NON RECURSIF D'UNE ARBORESCENCE
 **********************************************************************/
 
-int display(const char * path) {
+int display(const char * path, int mode) {
     struct stat buf;
     char type;
     int r;
@@ -30,14 +30,14 @@ int display(const char * path) {
 
     type = filetype(buf.st_mode);
     if (is_dir(type))
-        r = display_dir(path);
+        r = display_dir(path, mode);
     else
-        r = display_file(path);
+        r = display_file(path, mode);
 
     return r;
 }
 /**********************************************************************/
-int display_file(const char * path) {
+int display_file(const char * path, int mode) {
     struct stat buf;
     char type;
 
@@ -45,7 +45,7 @@ int display_file(const char * path) {
         return -1;
 
     type = filetype(buf.st_mode);
-    affiche_infos(&buf, type, path);
+    affiche_infos(&buf, type, path, mode);
 
     if (is_link(type)) {
         affiche_link(path);
@@ -54,25 +54,29 @@ int display_file(const char * path) {
     return 0;
 }
 /**********************************************************************/
-int display_dir(const char * path) {
-    DIR * dir;
-    struct dirent * dirent;
+int display_dir(const char * path, int mode) {
+    struct dirent **namelist;
+    int n;
 
-    if (NULL == (dir = opendir(path)))
-        return -1;
+    n = scandir(".", &namelist, NULL, alphasort);
+    if (n == -1) {
+        perror("scandir");
+        exit(EXIT_FAILURE);
+    }
 
-    while (NULL != (dirent = readdir(dir))) {
-        size_t size = strlen(path) + strlen(dirent->d_name) + 2;
+    while (n--) {
+        size_t size = strlen(path) + strlen(namelist[n]->d_name) + 2;
 
         char fullpath[BUFSIZ];
-        snprintf(fullpath, size, "%s/%s", path, dirent->d_name);
 
-        if (display_file(fullpath) == -1)
+        snprintf(fullpath, size, "%s/%s", path, namelist[n]->d_name);
+
+        if (display_file(fullpath, mode) == -1)
             return -1;
     }
+    free(namelist);
     printf("\n");
 
-    closedir(dir);
     return 0;
 }
 
@@ -80,7 +84,7 @@ int display_dir(const char * path) {
 /**********************************************************************
 PARCOURS RECURSIF D'UNE ARBORESCENCE
 **********************************************************************/
-int display_rec(const char * path, int recur) {
+int display_rec(const char * path, int recur, int mode) {
     struct stat buf;
     char type;
     int r;
@@ -90,29 +94,32 @@ int display_rec(const char * path, int recur) {
 
     type = filetype(buf.st_mode);
     if (is_dir(type))
-        r = display_dir_rec(path, recur);
+        r = display_dir_rec(path, recur, mode);
     else
-        r = display_file(path);
+        r = display_file(path, mode);
 
     return r;
 }
 
 /**********************************************************************/
-int display_dir_rec(const char * path, int recur) {
-    DIR * dir;
-    struct dirent * dirent;
+int display_dir_rec(const char * path, int recur, int mode) {
+    struct dirent **namelist;
+    int n;
 
-    if (NULL == (dir = opendir(path)))
-        return -1;
+    n = scandir(".", &namelist, NULL, alphasort);
+    if (n == -1) {
+        perror("scandir");
+        exit(EXIT_FAILURE);
+    }
 
-    while (NULL != (dirent = readdir(dir))) {
+    while (n--) {
         struct stat buf;
         char type;
 
-        size_t size = strlen(path) + strlen(dirent->d_name) + 2;
+        size_t size = strlen(path) + strlen(namelist[n]->d_name) + 2;
 
         char fullpath[BUFSIZ];
-        snprintf(fullpath, size, "%s/%s", path, dirent->d_name);
+        snprintf(fullpath, size, "%s/%s", path, namelist[n]->d_name);
 
         if (lstat(fullpath, &buf) == -1)
             return -1;
@@ -120,92 +127,17 @@ int display_dir_rec(const char * path, int recur) {
         type = filetype(buf.st_mode);
         /** si c'est un répertoire != "." ou ".." et c'est récursif */
         if (is_dir(type) && recur == 1 &&
-                strcmp(dirent->d_name, ".") && strcmp(dirent->d_name, "..")) {
-            if (display_dir_rec(fullpath, recur) == -1)
+                strcmp(namelist[n]->d_name, ".") && strcmp(namelist[n]->d_name, "..")) {
+            if (display_dir_rec(fullpath, recur, mode) == -1)
                 return -1;
         } else {
-            if (display_file(fullpath) == -1)
+            if (display_file(fullpath, mode) == -1)
                 return -1;
         }
     }
+    free(namelist);
 
-    closedir(dir);
     return 0;
 }
-
-/**********************************************************************
-PARCOURS RECURSIF D'UNE ARBORESCENCE utilisant la fonction ftw
-**********************************************************************/
-
-int display_ftw(const char * path, int recur) {
-    struct stat buf;
-    char type;
-    int r;
-
-    if (lstat(path, &buf) == -1)
-        return -1;
-
-    type = filetype(buf.st_mode);
-    if (is_dir(type))
-        r = display_dir_ftw(path, recur);
-    else
-        r = display_file_ftw(path, &buf, FTW_F);
-
-    return r;
-}
-
-/**********************************************************************/
-
-int display_file_ftw(const char * path, const struct stat * buf, int recur) {
-    char type;
-
-    type = filetype(buf->st_mode);
-    affiche_infos(buf, type, path);
-
-    if (is_link(type)) {
-        affiche_link(path);
-    }
-    printf("\n");
-    return 0;
-}
-
-
-/**********************************************************************/
-
-int display_dir_ftw(const char * path, int recur) {
-    DIR * dir;
-    struct dirent * dirent;
-    int deep = 16;
-
-    if (recur == 1) {
-	if (ftw(path, display_file_ftw, deep) == -1)
-		return -1;
-	else
-		return 0;
-    }
- 
-    if (NULL == (dir = opendir(path)))
-        return -1;
-
-    while (NULL != (dirent = readdir(dir))) {
-        struct stat buf;
-        size_t size = strlen(path) + strlen(dirent->d_name) + 2;
-
-        char fullpath[BUFSIZ];
-        snprintf(fullpath, size, "%s/%s", path, dirent->d_name);
-
-        if (lstat(fullpath, &buf) == -1)
-            return -1;
-
-        if (display_file_ftw(fullpath, &buf, 0) == -1)
-            return -1;
-    }
-    printf("\n");
-
-    closedir(dir);
-    return 0;
-}
-
-
 
 

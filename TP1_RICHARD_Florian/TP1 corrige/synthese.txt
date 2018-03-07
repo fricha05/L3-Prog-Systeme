@@ -15,6 +15,3 @@ Ces informations sont accessibles grâce à la structre stat.
 Pour obtenir les informations sur le type de l'élément, on utilise le
 champs st_mode qui, à l'aide des champs de la structure mode_t, 
 va retourner des valeurs permettant d'identifier l'élément.
-
-dirent :
-
