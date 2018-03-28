@@ -8,8 +8,7 @@
 
 int main(int argc, char * const argv[])
 {
-	pid_t child1;
-	pid_t child2;
+	pid_t child1, child2;
  	if(argv[1] == NULL){
 		perror("Pas d'argument");
 		exit(EXIT_FAILURE);

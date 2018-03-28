@@ -11,3 +11,12 @@ exit au lieu de return
 fonctions à utiliser stat, lstat, perror, exit
 
 utiliser le nom de variable buf ou buffer
+
+
+
+pipes :
+#nombre de fichiers .c dans mon HOME DIRECTORY
+find $HOME -name *.c 2>/dev/null | wc -l
+
+cours sympa :
+www.i3s.unice.fr/~tettaman/Classes/L2I/ProgSys
