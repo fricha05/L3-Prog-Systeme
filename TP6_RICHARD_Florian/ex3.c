@@ -7,13 +7,9 @@
 int main(int argc, char *argv[])
 {
 	int pipefd[2];
+	int i = 0;
 	pid_t child;
 	char buf[BUFSIZ];
-
-	if(argc < 3){
-		perror("pas assez d'arguments");
-		exit(EXIT_FAILURE);
-	}
 
 	if(pipe(pipefd) == -1){
 		perror("Pipe error");
@@ -22,16 +18,29 @@ int main(int argc, char *argv[])
 
 	if((child = fork()) != -1){
 		switch(child){
-			case 0://more R !W
-				dup2(pipefd[0], 0);
+			case 0:
 				close(pipefd[1]);
-				execlp(argv[2], argv[2], NULL);
+				read(pipefd[0], buf, BUFSIZ);
+				while(buf[i]){
+					if(i<9){
+						buf[i] = toupper(buf[i]);
+						i++;
+					}
+					else{
+						exit(EXIT_SUCCESS);
+					}
+				}
+				write(0, buf, strlen(buf));
 				exit(EXIT_SUCCESS);
-			default://ls W !R
-				dup2(pipefd[1], 1);
+			default:
 				close(pipefd[0]);
-				execlp(argv[1], argv[1], NULL);
+				dup2(pipefd[1],1);
+				scanf("%s", buf);
+				write(pipefd[1], buf, strlen(buf));
 		}
+	}
+	else{
+		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
 }

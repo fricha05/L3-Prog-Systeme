@@ -1,0 +1,73 @@
+_typemap :
+Cette structure permet d'éviter les switch ou les if à répétition.
+Pour cela, on définit un tableau de typemap. 
+Une typemap se constitue d'un caractère et d'un short qui est la 
+valeur de retour des fonctions de définies dans lstat qui donnent 
+des infos sur un fichier.
+On initialise le tableau de typemap avec les valeurs qui définissent
+le mode_t.
+
+stat :
+stat prend en paramètre une chaîne de caractère représentant un chemin 
+et une structure stat représentant l'élément au bout de ce chemin.
+Elle permet d'obtenir des informations sur l'élément pointé. 
+Ces informations sont accessibles grâce à la structre stat.
+Pour obtenir les informations sur le type de l'élément, on utilise le
+champs st_mode qui, à l'aide des champs de la structure mode_t, 
+va retourner des valeurs permettant d'identifier l'élément.
+
+getopt:
+Cette fonction prend en paramètre le nombre d'argument entrés par
+l'utilisateur, la chaîne de caractères correspondant aux arguments
+entrés par l'utilisateur et la chaîne de caractère correspondants aux
+options disponibles. Elle filtre les éléments de la chaîne argv en ne
+gardant que ceux ayant un - devant un caractère. Ainsi on peut savoir
+quelles sont les options que veut utiliser l'utilisateur et les
+programmer en conséquence.
+
+scandir:
+Cette fonction permet de lister des éléments contenus dans un dossier
+et d'y appliquer des filtres selon différents critères.
+
+write:
+La commande write écrit un nombre d'octets dans le buffer passé en
+paramètres dans un fichier. Ici, le fichier est décrit par 1 car on
+souhaite écrire sur la sortie standard.
+
+open:
+Elle prend en paramètres une chaine de caractères représentant le chemin
+du fichier à ouvrir, ainsi qu'un flag permettant de définir les options
+de modification/création du fichier en fonction de son état.
+Elle peut prendre en 3e paramètre les droits que l'utilisateur aura sur
+le fichier. Elle retourne un descripteur de fichier dans un entier.
+
+dup2:
+dup2 duplique le premier fichier passé en paramètre (entier descripteur
+de fichier) dans le 2e fichier passé en paramètre.
+
+fgets :
+fgets lit au plus le nombre de caractères passé en second paramètre
+depuis le fichier en 3e paramètre pour mettre la chaîne de caractères
+lue dans la chaîne passée en premier paramètre.
+
+fscanf:
+fscanf parcours un fichier cahr* par char* et concatène chaque chaîne
+à la chaîne de caractère passée second paramètre pour mettre la string
+obtenue dans le dernier paramètre.
+
+fgetc:
+Elle parcourt le fichier passé en paramètre caractère par caractère.
+
+exec*:
+selon *, permet de remplacer le processus actuel par un nouveau
+processus.
+
+waitpid:
+waitpid() attend des changements d'état des processus et dans le cas où un processus se termine, les ressources dédiées à se processus sont libérées.
+
+sigaction:
+il faut définir un handler qui attrape un signal
+Ensuite, il faut définir une structure sigaction et l'initialiser (sigemptyset), lui spécifier le handler et ensuite attraper le signal.
+
+pipe:
+en utilisant un tableau de file descriptor (int) à 2 cases(case 0 pour l'entrée du pipe et 1 pour la sortie), on crée un pipe qui permet au père d'envoyer des informations au fils, et au fils de les lire.
