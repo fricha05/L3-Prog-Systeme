@@ -1,0 +1,6 @@
+exo 5:
+Père / 3 fils
+fork
+exec
+
+avant exec -> dup
