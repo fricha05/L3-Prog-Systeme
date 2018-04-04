@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <unistd.h>
 
+#define MAXSPEED 10
+
 static int n;
 
 void handler(int sig){
@@ -28,8 +30,10 @@ int main(int argc, char *argv[])
 
 	while(1)
 	{
-		if((nb_octets_lus = read(0,buf,BUFSIZ))!=-1)
+		if((nb_octets_lus = read(0,buf,BUFSIZ))!=-1){
 			n += nb_octets_lus;
+			write(1, buf, MAXSPEED);
+		}
 	}
 	exit(EXIT_SUCCESS);
 }
