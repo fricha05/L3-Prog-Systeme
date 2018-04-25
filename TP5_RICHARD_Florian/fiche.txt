@@ -51,7 +51,7 @@ depuis le fichier en 3e paramètre pour mettre la chaîne de caractères
 lue dans la chaîne passée en premier paramètre.
 
 fscanf:
-fscanf parcours un fichier cahr* par char* et concatène chaque chaîne
+fscanf parcours un fichier char* par char* et concatène chaque chaîne
 à la chaîne de caractère passée second paramètre pour mettre la string
 obtenue dans le dernier paramètre.
 

@@ -13,7 +13,8 @@ void handler(int sig){
 	alarm(1);
 }
 
-int main(int argc, char *argv[])
+
+int main(int argc, char const * argv[])
 {
 	char buf[BUFSIZ];
 	struct sigaction sigact;
