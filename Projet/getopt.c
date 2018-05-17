@@ -11,7 +11,6 @@ int test_int(char* argv){
 
 void options(int argc, char* const argv[]){//nom à changer
   int o;
-  int index = 0;
   Slot* stocks;
   int* pages;
 
@@ -32,15 +31,15 @@ void options(int argc, char* const argv[]){//nom à changer
   }
 
   //création tableau
-  if((stocks = malloc(sizeof(Slot) * argv[2])) == NULL){
+  if((stocks = malloc(sizeof(Slot) * atoi(argv[2]))) == NULL){
     perror("malloc stocks error");
     exit(EXIT_FAILURE);
   }
-  if((pages = malloc(sizeof(int) * argv[4]) == NULL){
+  if((pages = malloc(sizeof(int) * atoi(argv[4]))) == NULL){
     perror("malloc pages error");
     exit(EXIT_FAILURE);
   }
 
   //appel au gestionnaire interface
-  commande(stocks, argv[2], pages, argv[4]);
+  commandes(stocks, atoi(argv[2]), pages, atoi(argv[4]));
 }

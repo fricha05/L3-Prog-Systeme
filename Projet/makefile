@@ -3,10 +3,12 @@ CC = colorgcc
 CFLAGS = -g -O2 -Wall -Wfatal-errors
 LDFLAGS =
 LDLIBS =
-OBJ = getopt.o interface.o gestion.o
+OBJ = main.o getopt.o interface.o gestion.o
 
 $(NOMFICHIER): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+
+
 
 main.o: main.c getopt.o interface.o gestion.o
 

@@ -6,27 +6,30 @@
 
 void print_pages(int* tab, int n){
   int i;
-  print("[");
+  printf("[");
   for(i = 0; i < n; i++){
-    print("%d ; ", tab[i]);
+    printf(" %d ", tab[i]);
   }
-  print("]\n");
+  printf("]\n");
 }
 
 void print_stocks(Slot* stocks, int n){
     int i;
-    print("[");
+    printf("[");
     for(i = 0; i < n; i++){
-      print("%d ; ", num.stocks[i]);
+      printf(" %d;%d ", stocks[i].num, stocks[i].cpt);
     }
-    print("]\n");
+    printf("]\n");
 }
 
 void minus_cpt(Slot* stock,int nb_Slot, int limit){
     int i;
+
     for(i = 0; i< nb_Slot -1;i++){
-        if(num.Slot[i] == -2) return;
-        if(cpt.Slot[i] >= limit) cpt.Slot[i] = cpt.Slot[i] -1;
+        if(stock[i].num == -2) return;
+        if(stock[i].cpt >= limit){
+            stock[i].cpt--;
+        }
     }
     return;
 }
@@ -34,7 +37,7 @@ void minus_cpt(Slot* stock,int nb_Slot, int limit){
 void add_pages(int new_num, int* pages, int nb_pages){
     int i;
     for(i=0; i<nb_pages-1; i++){
-        if(pages[i] == -1) pages[i] = new_pages;
+        if(pages[i] == -1) pages[i] = new_num;
     }
 }
 
@@ -48,6 +51,14 @@ int verif_pages(int num, int* pages, int nb_pages){
     return -1;
 }
 
+int get_least_used(Slot* stock, int nb_slot){
+    int i;
+    for(i=0; i<nb_slot; i++){
+        if(stock[i].cpt == 1) return i;
+    }
+    return -1;
+}
+
 void add_Slot(int new_num, Slot* stock,int* pages,int nb_Slot, int nb_pages){
     int i;
     int limit;
@@ -55,36 +66,37 @@ void add_Slot(int new_num, Slot* stock,int* pages,int nb_Slot, int nb_pages){
     int fetch;
     int temp;
     least_used = -1;
-    for(i=0;i<N;i++){
-        switch(num.stock[i]){
-            case (-2):
-                num.stock[i] = new_num;
-                cpt.stock[i] = nb_Slot;
-                minus_cpt(Slot, nb_Slot, nb_Slot);
-                return;
-
-            case(new_num):
-                limit = cpt.stock[i];
-                cpt.stock[i] = nb_Slot;
-                minus_cpt(Slot, nb_Slot, limit);
-                return;
+    for(i=0;i<nb_Slot;i++){
+        if(stock[i].num == -2){
+            stock[i].num = new_num;
+            stock[i].cpt = nb_Slot;
+            minus_cpt(stock, nb_Slot, nb_Slot);
+            return;
         }
-        if(cpt.stock[i] == 0) least_use = i;
+        else if(stock[i].num == new_num){
+            limit = stock[i].cpt;
+            // printf("limit : %d\n", limit);
+            stock[i].cpt = nb_Slot;
+            minus_cpt(stock, nb_Slot, limit);
+            return;
+        }
+        // if(stock[i].cpt == 0) least_used = i;
     }
+    least_used = get_least_used(stock, nb_Slot);
+    printf("least_used is %d\n", least_used);
     fetch = verif_pages(new_num, pages, nb_pages);
     if(fetch != -1){
         temp = pages[fetch];
-        pages[fetch] = num.stock[least_used];
-        num.stock[least_used] = temp;
-        cpt.stock[least_used] = nb_Slot;
-        minus_cpt(Slot, nb_Slot, nb_Slot);
+        pages[fetch] = stock[least_used].num;
+        stock[least_used].num = temp;
+        stock[least_used].cpt = nb_Slot;
+        minus_cpt(stock, nb_Slot, nb_Slot);
         return;
     }
-
-    add_pages(num.stock[least_used], pages, nb_pages);
-    num.stock[least_used] = new_num;
-    cpt.stock[least_used] = nb_Slot;
-    minus_cpt(Slot, nb_Slot_, nb_Slot);
+    add_pages(stock[least_used].num, pages, nb_pages);
+    stock[least_used].num = new_num;
+    stock[least_used].cpt = nb_Slot;
+    minus_cpt(stock, nb_Slot, nb_Slot);
     return;
 
 

@@ -4,14 +4,19 @@
 #include <string.h>
 #include <unistd.h>
 
-int commandes(Slot* stocks, int nbStocks, int* pages, int nbPages){
-  char s[BUFSIZ];
+#include <sys/types.h>
+#include <sys/wait.h>
+
+
+void commandes(Slot* stocks, int nbStocks, int* pages, int nbPages){
+
   char* err;
-  int input;
+  char s[BUFSIZ];
+  int input,i;
 
   for(i = 0; i < nbStocks; i++){
-    cpt.stocks[i]= -1;
-    num.stocks[i]= -2;
+    stocks[i].cpt= -1;
+    stocks[i].num= -2;
   }
 
   for(i = 0; i < nbPages; i++){
@@ -19,29 +24,29 @@ int commandes(Slot* stocks, int nbStocks, int* pages, int nbPages){
   }
 
   while(1){
-    scanf("%c", &s);
+    scanf("%s\n", s);
+
+    // s = read(0, buf, strlen(buf));
     if(strcmp(s, "x") == 0){
       exit(EXIT_SUCCESS);
     }
-
     if(strcmp(s, "p") == 0){
       print_stocks(stocks, nbStocks);
       print_pages(pages, nbPages);
     }
-    strtol(s, &err, 10)
-    if(strcmp(err, "\0") == 0){
-      perror("erreur de commande");
-      exit(EXIT_FAILURE);
-    }
+    // strtol(s, &err, 10);
+    // if(strcmp(err, "\0") == 0){
+    //   perror("erreur de commande");
+    //   exit(EXIT_FAILURE);
+    // }
 
     input = atoi(s);
-
-    if(input >= 0 && input < nbStocks){
+    if(input >= 0 && input < nbPages){
         add_Slot(input, stocks, pages, nbStocks, nbPages);
     }
     else{
         perror("mauvaise entrée");
-        exit(EXIT_FAILURE);
     }
   }
+  return;
 }
