@@ -1,6 +1,7 @@
+#include "getopt.h"
+
 int test_int(char* argv){
   int i = atoi(argv);
-  int* staocks, pages, dates;
   if(i == 0){
     perror("erreur taille");
     exit(EXIT_FAILURE);
@@ -8,16 +9,18 @@ int test_int(char* argv){
   return i;
 }
 
-void options(int argc, char const* argv[]){//nom à changer
+void options(int argc, char* const argv[]){//nom à changer
   int o;
   int index = 0;
+  Slot* stocks;
+  int* pages;
 
   //tests options
-  if(o = getopt(argc, argv, "s:v:") != "s"){
+  if((o = getopt(argc, argv, "s:v:")) != 's'){
     perror("erreur ordre/syntaxe options");
     exit(EXIT_FAILURE);
   }
-  if(o = getopt(argc, argv, "s:v:") != "v"){
+  if((o = getopt(argc, argv, "s:v:")) != 'v'){
     perror("erreur ordre/syntaxe options");
     exit(EXIT_FAILURE);
   }
@@ -29,7 +32,7 @@ void options(int argc, char const* argv[]){//nom à changer
   }
 
   //création tableau
-  if((stocks = malloc(sizeof(int) * argv[2])) == NULL){
+  if((stocks = malloc(sizeof(Slot) * argv[2])) == NULL){
     perror("malloc stocks error");
     exit(EXIT_FAILURE);
   }
@@ -38,10 +41,6 @@ void options(int argc, char const* argv[]){//nom à changer
     exit(EXIT_FAILURE);
   }
 
-  if(dates = malloc(sizeof(int)*argv[2]) == NULL){
-    perror("malloc dates error");
-    exit(EXIT_FAILURE);
-  }
   //appel au gestionnaire interface
   commande(stocks, argv[2], pages, argv[4]);
 }
